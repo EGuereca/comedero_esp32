@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\activarContoller;
+use App\Http\Controllers\singupContoller;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('activar/{user}', [activarContoller::class, 'activar'])->name('activar')->middleware('signed');
+Route::post('reactivate', [activarContoller::class, 'reactivar']);
+Route::post('login', [singupContoller::class, 'login']);
+Route::post('register', [singupContoller::class, 'register']);
