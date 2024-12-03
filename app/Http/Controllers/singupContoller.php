@@ -59,7 +59,8 @@ class singupContoller extends Controller
 
         $user = User::where('email', $data['email'])->first();
 
-        if (!$user) {
+        
+        if (!Hash::check($data['password'], $user->password)) {
             return response()->json([
                 'message' => 'Credenciales inválidas.'
             ], 401);
