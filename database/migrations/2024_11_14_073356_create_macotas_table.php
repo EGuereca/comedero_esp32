@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -17,7 +18,6 @@ return new class extends Migration
             $table->id();
             $table->string('nombre', 255);
             $table->enum('animal', ['perro', 'gato', 'otro']);
-            $table->foreignId('comedero_id')->constrained('comederos');
             $table->string('img', 255)->nullable();
             $table->integer('comidas_diarias')->nullable();
             $table->timestamps();
