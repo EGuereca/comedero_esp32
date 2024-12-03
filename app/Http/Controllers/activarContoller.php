@@ -62,4 +62,10 @@ class activarContoller extends Controller
             'message' => 'Se envió un correo a su cuenta para completar el registro. Tiene 5 minutos para activar su cuenta.',
         ]);
     }
+
+    public function prueba(){
+        return response()->json([
+            'message' => 'Si jala padrino',
+        ]);
+    }
 }

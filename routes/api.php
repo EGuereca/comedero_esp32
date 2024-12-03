@@ -20,3 +20,4 @@ Route::get('activar/{user}', [activarContoller::class, 'activar'])->name('activa
 Route::post('reactivate', [activarContoller::class, 'reactivar']);
 Route::post('login', [singupContoller::class, 'login']);
 Route::post('register', [singupContoller::class, 'register']);
+Route::get('prueba', [singupContoller::class, 'prueba']);
