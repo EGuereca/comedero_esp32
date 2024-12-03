@@ -34,7 +34,7 @@ class singupContoller extends Controller
         $user->rol = "invitado";
         $user->save();
 
-        $url = URL::temporarySignedRoute('activar', now()->addMinutes(5), ['user' => $user->id]);    
+        $url = URL::temporarySignedRoute('activar', now()->addMinutes(5), ['user' => $user->id]);
        
         Mail::to($user->email)->send(new ConfirmarCuenta($user, $url));
 
