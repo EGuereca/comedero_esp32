@@ -48,7 +48,7 @@ class singupContoller extends Controller
         $data = $request->all();
 
         $validate = Validator::make($data, [
-            'email' => ['required', 'email', 'max:255'],
+            'email' => ['required','string' ,'email', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'max:40'],
         ]);
 
@@ -59,17 +59,31 @@ class singupContoller extends Controller
 
         $user = User::where('email', $data['email'])->first();
 
+        if (!$user) {
+            return response()->json([
+                'message' => 'Credenciales inválidas.'
+            ], 401);
+        }
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Credenciales inválidas.'
+            ], 401);
+        }
+
         if ($user->rol === 'invitado') {
             return response()->json([
                 'message' => 'Acceso denegado. Por favor, contacte con un administrador para obtener acceso.'
             ], 403);
         }
 
-        if ($user->estado == false) {
+        if ($user->estado === false) {
             return response()->json([
                 'message' => 'Aún no activa su cuenta',
             ]);
         }
+
+       
 
         $token = $user->createToken('Access Token')->plainTextToken;
 
