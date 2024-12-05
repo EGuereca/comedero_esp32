@@ -24,7 +24,7 @@ class singupContoller extends Controller
         ]);
 
         if ($validate->fails()) {
-            return response()->json(["validator" => $validate->errors()]);
+            return response()->json(["validator" => $validate->errors()], 422);
         }
 
         $user = new User();
