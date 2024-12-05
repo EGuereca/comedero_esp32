@@ -24,7 +24,7 @@ class singupContoller extends Controller
         ]);
 
         if ($validate->fails()) {
-            return response()->json($validate->errors());
+            return response()->json(["validator" => $validate->errors()]);
         }
 
         $user = new User();
@@ -35,7 +35,7 @@ class singupContoller extends Controller
         $user->save();
 
         $url = URL::temporarySignedRoute('activar', now()->addMinutes(5), ['user' => $user->id]);
-       
+
         Mail::to($user->email)->send(new ConfirmarCuenta($user, $url));
 
         return response()->json([
