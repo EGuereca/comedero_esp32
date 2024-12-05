@@ -54,7 +54,7 @@ class singupContoller extends Controller
 
         
         if ($validate->fails()) {
-            return response()->json($validate->errors());
+            return response()->json(["validator" => $validate->errors()], 422);
         }
 
         $user = User::where('email', $data['email'])->first();
@@ -81,7 +81,7 @@ class singupContoller extends Controller
         if ($user->estado === false) {
             return response()->json([
                 'message' => 'Aún no activa su cuenta',
-            ]);
+            ], 403);
         }
 
        
