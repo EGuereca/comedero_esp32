@@ -58,7 +58,12 @@ class singupContoller extends Controller
         }
 
         $user = User::where('email', $data['email'])->first();
-
+        
+        if (!$user) {
+            return response()->json([
+                'message' => 'Credenciales inválidas.'
+            ], 401);
+        }
         
         if (!Hash::check($data['password'], $user->password)) {
             return response()->json([
@@ -66,11 +71,7 @@ class singupContoller extends Controller
             ], 401);
         }
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'Credenciales inválidas.'
-            ], 401);
-        }
+        
 
         if ($user->rol === 'invitado') {
             return response()->json([
