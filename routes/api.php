@@ -6,17 +6,6 @@ use App\Http\Controllers\activarContoller;
 use App\Http\Controllers\singupContoller;
 use App\Http\Controllers\AuthController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 Route::get('activar/{user}', [activarContoller::class, 'activar'])->name('activar')->middleware('signed');
 Route::post('reactivate', [activarContoller::class, 'reactivar']);
 Route::post('login', [singupContoller::class, 'login']);
@@ -26,4 +15,7 @@ Route::get('prueba', [activarContoller::class, 'prueba']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::put('user/update', [AuthController::class, 'updateUser']);
     Route::get('user/logout', [AuthController::class, 'logout']);
+    Route::get('user/me', [AuthController::class, 'me']);
+
+
 });
