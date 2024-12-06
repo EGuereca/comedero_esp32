@@ -25,7 +25,8 @@ class AdafruitController extends Controller
 
         // Construir la URL del feed
         $url = "https://io.adafruit.com/$username/feeds/$feed/data";
-
+        
+        //KEVIN
         // Enviar los datos a Adafruit IO
         $response = Http::withHeaders([
             'X-AIO-Key' => $apiKey,
