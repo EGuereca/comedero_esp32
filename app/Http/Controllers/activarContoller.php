@@ -52,15 +52,15 @@ class activarContoller extends Controller
         }
 
         if ($user->estado) {
-            return response()->json(['message' => 'La cuenta ya está activada'], 200);
+            return response()->json(['message' => 'La cuenta ya está activada'], 409);
         }
 
         $url = URL::temporarySignedRoute('activar', now()->addMinutes(5), ['user' => $user->id]);
         Mail::to($user->email)->send(new ConfirmarCuenta($user, $url));
 
         return response()->json([
-            'message' => 'Se envió un correo a su cuenta para completar el registro. Tiene 5 minutos para activar su cuenta.',
-        ]);
+        'message' => 'Se envió un correo a su cuenta para completar el registro. Tiene 5 minutos para activar su cuenta.',
+        ], 200);
     }
 
     public function prueba(){
