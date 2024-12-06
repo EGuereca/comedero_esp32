@@ -41,11 +41,18 @@ class activarContoller extends Controller
 
     public function reactivar(Request $request)
     {
-        $validatedData = $request->validate([
-            'email' => 'required|string|email|max:255',
+
+        $data = $request->all();
+
+        $validate = Validator::make($data, [
+            'email' => ['required', 'string', 'email', 'max:255'],
         ]);
 
-        $user = User::where('email', $validatedData['email'])->first();
+        if ($validate->fails()) {
+            return response()->json(["validator" => $validate->errors()], 422);
+        }
+
+        $user = User::where('email', $data['email'])->first();
 
         if (!$user) {
             return response()->json(['message' => 'No hay ningún usuario con este correo'], 404);
