@@ -1,63 +1,61 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Jobs\SyncFeedJob;
+use App\Models\Temperatura;
+use App\Models\Humedad;
+use App\Models\DispensadorComida;
+use App\Models\GasesComida;
+use App\Models\MascotaCerca;
+use App\Models\NivelAgua;
+use App\Models\NivelAguaServida;
+use App\Models\NivelComida;
+use App\Models\NivelComidaServida;
 use Illuminate\Support\Facades\Log;
 
 class AdafruitController extends Controller
 {
-    public function sendData(Request $request)
+    protected $username;
+    protected $apiKey;
+
+    public function __construct()
     {
-        // Validar los datos recibidos
-        $request->validate([
-            'feed' => 'required|string',
-            'value' => 'required    ',
-        ]);
+        $this->username = env('ADAFRUIT_IO_USERNAME');
+        $this->apiKey = env('ADAFRUIT_IO_KEY');
+    }
 
-        // Obtener datos de la solicitud
-        $feed = $request->input('feed');
-        $value = $request->input('value');
+    /**
+     * Sincronizar datos de un feed específico con su tabla correspondiente.
+     */
+    public function syncFeed(Request $request, $feed)
+    {
+        // Mapeo de feeds a sus modelos correspondientes
+        $modelMapping = [
+            'temperatura-agua' => Temperatura::class,
+            'humedad-alimento' => Humedad::class,
+            'dispensador-comida' => DispensadorComida::class,
+            'gases-comida' => GasesComida::class,
+            'mascota-cerca' => MascotaCerca::class,
+            'nivel-agua' => NivelAgua::class,
+            'nivel-agua-servida' => NivelAguaServida::class,
+            'nivel-comida' => NivelComida::class,
+            'nivel-comida-servida' => NivelComidaServida::class,
+        ];
 
-        // Variables de entorno
-        $username = env('ADAFRUIT_IO_USERNAME');
-        $apiKey = env('ADAFRUIT_IO_KEY');
-
-        // Construir la URL del feed
-        $url = "https://io.adafruit.com/$username/feeds/$feed/data";
-        
-        //KEVIN
-        // Enviar los datos a Adafruit IO
-        $response = Http::withHeaders([
-            'X-AIO-Key' => $apiKey,
-        ])->post($url, [
-            'value' => $value,
-        ]);
-
-
-        Log::info('Datos enviados a Adafruit:', [
-            'url' => $url,
-            'headers' => ['X-AIO-Key' => $apiKey],
-            'body' => ['value' => $value],
-        ]);
-        
-        Log::info('Respuesta de Adafruit IO:', [
-            'status' => $response->status(),
-            'body' => $response->body(),
-        ]);
-        
-
-        if ($response->successful()) {
+        if (!array_key_exists($feed, $modelMapping)) {
             return response()->json([
-                'message' => 'Datos enviados con éxito a Adafruit IO.',
-                'response' => $response->json(),
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Error al enviar datos a Adafruit IO.',
-                'status' => $response->status(),
-                'error' => $response->body(),
-            ], $response->status());
+                'message' => "El feed '{$feed}' no está configurado para sincronizarse.",
+            ], 400);
         }
+
+ 
+        SyncFeedJob::dispatch($feed, $modelMapping[$feed]);
+       
+        
+        return response()->json([
+            'message' => "Sincronización del feed '{$feed}' en proceso.",
+        ], 200);
     }
 }
