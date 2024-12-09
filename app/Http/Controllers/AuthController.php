@@ -27,11 +27,11 @@ class AuthController extends Controller
     }
 
     if ($request->filled('old_password') && !$request->filled('new_password') && !$request->filled('new_password_confirmation') ){
-        return response()->json(["validator" => "Escribe tu nueva contraseña y confirmala"], 422);
+        return response()->json(["message" => "Escribe tu nueva contraseña y confirmala"], 400);
     }
 
     if ($request->filled('old_password') && !Hash::check($request->old_password, $user->password)) {
-        return response()->json(["validator" => "La contraseña antigua no coincide"], 422);
+        return response()->json(["message" => "La contraseña antigua no coincide"], 401);
     }
 
     if ($request->filled('new_password') && $request->new_password == $request->new_password_confirmation) {
