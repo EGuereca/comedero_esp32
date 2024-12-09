@@ -25,3 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('comederos', [FeederController::class, 'obtenerComederos']);
 
 });
+
+use App\Http\Controllers\AdafruitController;
+
+Route::get('/sync-feed/{feed}', [AdafruitController::class, 'syncFeed']);
