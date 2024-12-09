@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal('cantidad_comida_servida', 4, 1)->nullable();
             $table->decimal('humedad', 4, 1)->nullable();
             $table->decimal('gases', 4, 1)->nullable();
-            $table->decimal('temperatua_agua', 4, 1)->nullable;
+            $table->decimal('temperatua_agua', 4, 1)->nullable();
             $table->boolean('mascota_cerca')->nullable();
             $table->enum('estado', ['ACTIVO', 'INACTIVO', 'DEFECTUOSO']);
             $table->softDeletes();

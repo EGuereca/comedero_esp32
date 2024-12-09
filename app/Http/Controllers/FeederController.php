@@ -4,53 +4,108 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Mascota;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\Comedero;
 
 class FeederController extends Controller
 {
-    public function obtenerComederos(Request $request)
+    public function crearMascota(Request $request)
     {
-        $usuario = $request->user();
-        $nombreMascota = $request->query('nombre_mascota'); 
-
-        if (!$nombreMascota) {
-            return response()->json(['error' => 'Debe proporcionar el nombre de la mascota.'], 400);
-        }
-
-        $mascota = $usuario->mascotas()->where('nombre', $nombreMascota)->first();
-
-        if (!$mascota) {
-            return response()->json(['error' => 'Mascota no encontrada.'], 404);
-        }
-
-        $comederos = $mascota->comederos()->get();
-
-        return response()->json($comederos, 200);
-    }
-
-    public function crearComedero(Request $request)
-    {
-        $usuario = $request->user(); 
         $data = $request->all();
 
         $validatedData = Validator::make($data, [
             'nombre' => 'required|string|max:255',
             'animal' => 'required|in:perro,gato,otro',
+            'img' => 'nullable|string|max:255',
+            'comidas_diarias' => 'nullable|integer|min:0',
         ]);
 
         if ($validatedData->fails()) {
             return response()->json(["validator" => $validatedData->errors()], 422);
         }
 
-        $mascota = $usuario->mascotas()->create($validatedData);
-
-        $comedero = $mascota->comederos()->create([
-            'usuario_id' => $usuario->id,
-            'estado' => 'ACTIVO',
+        Mascota::create([
+            'usuario_id' => Auth::id(),
+            'nombre' => $request->nombre,
+            'animal' => $request->animal,
+            'comidas_diarias' => $request->comidas_diarias ?? null,
         ]);
 
         return response()->json([
-            'mascota' => $mascota,
-            'comedero' => $comedero,
+            'message' => 'Mascota creada exitosamente',
         ], 201);
     }
+
+    public function verMascotas()
+    {
+        $mascotas = Mascota::where('usuario_id', Auth::id())->get();
+
+        return response()->json([
+            'message' => 'Mascotas del usuario autenticado',
+            'data' => $mascotas,
+        ]);
+    }
+
+    public function crearComedero(Request $request)
+    {   
+        $data = $request->all();
+
+        $validatedData = Validator::make($data, [
+            'mascota_id' => 'required|exists:mascotas,id',
+            'numero_serie' => 'required|string',
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json(["validator" => $validatedData->errors()], 422);
+        }
+
+        $numeroSerie = DB::table('numero_serie')->where('numero_serie', $request->numero_serie)->first();
+
+        if (!$numeroSerie) {
+            return response()->json([
+                'message' => 'El número de serie no existe.',
+            ], 400);
+        }
+
+        if ($numeroSerie->estado === 'inactivo') {
+            return response()->json([
+                'message' => 'El número de serie existe, pero está inactivo.',
+            ], 400);
+        }
+        
+
+        $comedero = Comedero::create([
+            'usuario_id' => Auth::id(),
+            'mascota_id' => $request->mascota_id,
+            'numero_serie' => $request->numero_serie,
+            'estado' => 'ACTIVO',
+        ]);
+
+        DB::table('numero_serie')
+        ->where('numero_serie', $request->numero_serie)
+        ->update(['estado' => 'inactivo']);
+
+        return response()->json([
+            'message' => 'Comedero creado exitosamente'
+        ], 201);
+    }
+
+    public function verComederos()
+    {
+        $comederos = Comedero::with('mascota')
+        ->where('usuario_id', Auth::id())
+        ->get();
+        
+        if(!$comederos){
+            return response()->json(['message' => 'no existen comederos aun'], 404);
+        }
+        return response()->json([
+            'data' => $comederos
+        ]);
+    }
+
+
+    
 }

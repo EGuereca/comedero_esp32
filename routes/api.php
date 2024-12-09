@@ -21,9 +21,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     //comederos
-    Route::post('comederos/crear', [FeederController::class, 'crearComedero']);
-    Route::get('comederos', [FeederController::class, 'obtenerComederos']);
-
+    Route::post('/mascotas/crear', [FeederController::class, 'crearMascota']);
+    Route::get('/mascotas', [FeederController::class, 'verMascotas']);
+    Route::post('/comederos/crear', [FeederController::class, 'crearComedero']);
+    Route::get('/comederos', [FeederController::class, 'verComederos']);
+    
 });
 
 use App\Http\Controllers\AdafruitController;
