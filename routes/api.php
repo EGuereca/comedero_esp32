@@ -19,3 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 });
+
+use App\Http\Controllers\AdafruitController;
+
+Route::get('/sync-feed/{feed}', [AdafruitController::class, 'syncFeed']);

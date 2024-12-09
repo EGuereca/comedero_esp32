@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Console\Scheduling\Schedule;
 
 class Kernel extends HttpKernel
 {
@@ -22,6 +23,13 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
+
+    protected function schedule(Schedule $schedule)
+{
+    // Ejecutar el comando cada 30 segundos
+    $schedule->command('sync:feeds')->everyMinute()->withoutOverlapping();
+}
+
 
     /**
      * The application's route middleware groups.
