@@ -106,6 +106,18 @@ class FeederController extends Controller
         ]);
     }
 
+    public function verComedero(Request $request, $id)
+    {
+
+        $comedero = Comedero::with('mascota')
+        ->where('id', $id)
+        ->get();
+
+        return response()->json([
+            'data' => $comedero
+        ]);
+    }
+
 
     
 }

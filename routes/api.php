@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/mascotas', [FeederController::class, 'verMascotas']);
     Route::post('/comederos/crear', [FeederController::class, 'crearComedero']);
     Route::get('/comederos', [FeederController::class, 'verComederos']);
+    Route::get('/comedero/{id}', [FeederController::class, 'verComedero']);
     
 });
 

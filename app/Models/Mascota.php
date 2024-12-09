@@ -17,6 +17,11 @@ class Mascota extends Model
         'comidas_diarias'
     ];
 
+    protected $hidden = [
+        "created_at",
+        "updated_at"
+    ];
+
     public function usuario()
     {
         return $this->belongsTo(User::class, 'usuario_id');

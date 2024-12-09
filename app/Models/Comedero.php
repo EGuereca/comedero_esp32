@@ -24,6 +24,12 @@ class Comedero extends Model
         'estado'
     ];
 
+    protected $hidden = [
+        "deleted_at",
+        "created_at",
+        "updated_at"
+    ];
+
     public function usuario()
     {
         return $this->belongsTo(User::class, 'usuario_id');
