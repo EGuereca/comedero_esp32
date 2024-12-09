@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -14,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mascotas', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre', 255);
-            $table->enum('animal', ['perro', 'gato', 'otro']);
-            $table->foreignId('usuario_id')->constrained('users');
-            $table->integer('comidas_diarias')->nullable();
-            $table->timestamps();
+        Schema::create('numero_serie', function (Blueprint $table) {
+            $table->string("numero_serie");
+            $table->string("estado");
         });
     }
 
@@ -31,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mascotas');
+        //
     }
 };

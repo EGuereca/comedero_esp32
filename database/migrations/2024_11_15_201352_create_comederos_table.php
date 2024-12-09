@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('comederos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('usuario_id')->constrained('users');
-            $table->foreignId('macota_id')->constrained('mascotas');
+            $table->foreignId('mascota_id')->constrained('mascotas');
+            $table->string("numero_serie");
             $table->decimal('cantidad_comida', 4, 1)->nullable();
             $table->decimal('cantidad_agua', 4, 1)->nullable();
             $table->decimal('cantidad_agua_servida', 4, 1)->nullable();
@@ -24,8 +25,9 @@ return new class extends Migration
             $table->decimal('humedad', 4, 1)->nullable();
             $table->decimal('gases', 4, 1)->nullable();
             $table->decimal('temperatua_agua', 4, 1)->nullable;
-            $table->boolean('mascota_cerca');
+            $table->boolean('mascota_cerca')->nullable();
             $table->enum('estado', ['ACTIVO', 'INACTIVO', 'DEFECTUOSO']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

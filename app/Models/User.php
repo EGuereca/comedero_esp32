@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Comedero;
+use App\Models\Mascota;
 
 class User extends Authenticatable
 {
@@ -43,4 +45,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function mascotas()
+    {
+        return $this->hasMany(Mascota::class, 'usuario_id');
+    }
+
+    public function comederos()
+    {
+        return $this->hasMany(Comedero::class, 'usuario_id');
+    }
 }
