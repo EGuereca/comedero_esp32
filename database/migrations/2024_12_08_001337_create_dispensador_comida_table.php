@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('dispensador_comida', function (Blueprint $table) {
             $table->id();
-            $table->float('valor'); // Valor del feed
+            $table->integer('valor'); // Valor del feed
             $table->timestamp('fecha'); // Fecha del dato
             $table->timestamps();
         });
