@@ -41,7 +41,7 @@ class FeederController extends Controller
 
     public function verMascotas()
     {
-        $mascotas = Mascota::with('usuario_id', Auth::id())->get();
+        $mascotas = Mascota::where('usuario_id', Auth::id())->get();
 
         return response()->json([
             'message' => 'Mascotas del usuario autenticado',
@@ -121,6 +121,7 @@ class FeederController extends Controller
         if(!$comederos){
             return response()->json(['message' => 'no existen comederos aun'], 404);
         }
+
         return response()->json([
             'data' => $comederos
         ]);
