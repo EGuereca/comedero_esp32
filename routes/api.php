@@ -20,12 +20,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('user/me', [AuthController::class, 'me']);
 
 
+    //mascotas
+    Route::post('mascotas/crear', [FeederController::class, 'crearMascota']);
+    Route::get('mascotas', [FeederController::class, 'verMascotas']);
+    Route::delete('mascotas/eliminar/{id}', [FeederController::class, 'eliminarMascota']);
+
     //comederos
-    Route::post('/mascotas/crear', [FeederController::class, 'crearMascota']);
-    Route::get('/mascotas', [FeederController::class, 'verMascotas']);
-    Route::post('/comederos/crear', [FeederController::class, 'crearComedero']);
-    Route::get('/comederos', [FeederController::class, 'verComederos']);
-    Route::get('/comedero/{id}', [FeederController::class, 'verComedero']);
+    Route::post('comederos/crear', [FeederController::class, 'crearComedero']);
+    Route::get('comederos', [FeederController::class, 'verComederos']);
+    Route::get('comedero/{id}', [FeederController::class, 'verComedero']);
+    
     
 });
 

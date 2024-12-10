@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mascota extends Model
 {
-    use HasFactory;
 
+
+    use HasFactory, SoftDeletes;
+    protected $table = 'mascotas';
     protected $fillable = [
         'usuario_id',
         'nombre',
@@ -19,7 +22,8 @@ class Mascota extends Model
 
     protected $hidden = [
         "created_at",
-        "updated_at"
+        "updated_at",
+        "deleted_at"
     ];
 
     public function usuario()
