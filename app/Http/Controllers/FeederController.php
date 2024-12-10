@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Comedero;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Http;
 
 class FeederController extends Controller
 {
@@ -70,48 +71,48 @@ class FeederController extends Controller
     }
 
     public function crearComedero(Request $request)
-    {
-        $data = $request->all();
+{
+    $data = $request->all();
 
-        $validatedData = Validator::make($data, [
-            'mascota_id' => 'required|exists:mascotas,id',
-            'numero_serie' => 'required|string',
-        ]);
+    $validatedData = Validator::make($data, [
+        'mascota_id' => 'required|exists:mascotas,id',
+    ]);
 
-        if ($validatedData->fails()) {
-            return response()->json(["validator" => $validatedData->errors()], 422);
-        }
-
-        $numeroSerie = DB::table('numero_serie')->where('numero_serie', $request->numero_serie)->first();
-
-        if (!$numeroSerie) {
-            return response()->json([
-                'message' => 'El número de serie no existe.',
-            ], 400);
-        }
-
-        if ($numeroSerie->estado === 'inactivo') {
-            return response()->json([
-                'message' => 'El número de serie existe, pero está inactivo.',
-            ], 400);
-        }
-        
-
-        $comedero = Comedero::create([
-            'usuario_id' => Auth::id(),
-            'mascota_id' => $request->mascota_id,
-            'numero_serie' => $request->numero_serie,
-            'estado' => 'ACTIVO',
-        ]);
-
-        DB::table('numero_serie')
-        ->where('numero_serie', $request->numero_serie)
-        ->update(['estado' => 'inactivo']);
-
-        return response()->json([
-            'message' => 'Comedero creado exitosamente'
-        ], 201);
+    if ($validatedData->fails()) {
+        return response()->json(["validator" => $validatedData->errors()], 422);
     }
+
+    
+    $comedero = Comedero::create([
+        'usuario_id' => Auth::id(),
+        'mascota_id' => $request->mascota_id,
+        'estado' => 'ACTIVO',
+    ]);
+
+    
+    $adafruitApiKey = env('ADAFRUIT_IO_KEY');
+    $username = env('ADAFRUIT_IO_USERNAME');
+
+    $response = Http::withHeaders([
+        'X-AIO-Key' => $adafruitApiKey,
+    ])->post("https://io.adafruit.com/api/v2/{$username}/groups", [
+        'name' => "$comedero->id",
+        'description' => 'Grupo asociado al comedero',
+    ]);
+
+    if ($response->failed()) {
+        return response()->json([
+            'message' => 'Error al crear el grupo en Adafruit',
+            'error' => $response->json(),
+            'credenciales' => $adafruitApiKey . $username
+        ], 500);
+    }
+
+    return response()->json([
+        'message' => 'Comedero creado exitosamente',
+        'group' => $response->json(),
+    ], 201);
+}
 
     public function verComederos()
     {

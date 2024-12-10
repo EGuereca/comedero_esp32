@@ -26,6 +26,8 @@ class singupContoller extends Controller
         if ($validate->fails()) {
             return response()->json(["validator" => $validate->errors()], 422);
         }
+        
+        
 
         $user = new User();
         $user->name = $data['name'];
@@ -33,6 +35,8 @@ class singupContoller extends Controller
         $user->password = Hash::make($data['password']);
         $user->rol = "invitado";
         $user->save();
+
+
 
         $url = URL::temporarySignedRoute('activar', now()->addMinutes(5), ['user' => $user->id]);
 

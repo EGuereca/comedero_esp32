@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('usuario_id')->constrained('users');
             $table->foreignId('mascota_id')->constrained('mascotas');
-            $table->string("numero_serie");
             $table->decimal('cantidad_comida', 4, 1)->nullable();
             $table->decimal('cantidad_agua', 4, 1)->nullable();
             $table->decimal('cantidad_agua_servida', 4, 1)->nullable();

@@ -15,7 +15,6 @@ class Comedero extends Model
     protected $fillable = [
         'usuario_id',
         'mascota_id',
-        'numero_serie',
         'cantidad_comida',
         'cantidad_agua',
         'cantidad_agua_servida',
