@@ -19,7 +19,8 @@ class ComederoController extends Controller
         $username =  env('ADAFRUIT_IO_USERNAME');
         
         $this->adafruitService->updateComederoData($username);
+        
+        return response()->json(['message' => 'Datos de comedero actualizados correctamente.'], 200);
 
-        return response()->json(['message' => 'Datos de comedero actualizados correctamente.']);
     }
 }
