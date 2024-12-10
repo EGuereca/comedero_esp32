@@ -33,7 +33,7 @@ class AdafruitController extends Controller
     {
         // Mapeo de feeds a sus modelos correspondientes
         $modelMapping = [
-            'temperatura-agua' => Temperatura::class,
+            'temperatura' => Temperatura::class,
             'humedad-alimento' => Humedad::class,
             'dispensador-comida' => DispensadorComida::class,
             'gases-comida' => GasesComida::class,
@@ -50,9 +50,9 @@ class AdafruitController extends Controller
             ], 400);
         }
 
- 
+
         SyncFeedJob::dispatch($feed, $modelMapping[$feed]);
-       
+
         
         return response()->json([
             'message' => "Sincronización del feed '{$feed}' en proceso.",

@@ -11,6 +11,7 @@ class Kernel extends ConsoleKernel
     {
         // Programa el comando para sincronizar los feeds cada minuto
         $schedule->command('sync:feeds')->everyMinute()->withoutOverlapping();
+
     }
 
     protected function commands()

@@ -6,6 +6,7 @@ use App\Http\Controllers\activarContoller;
 use App\Http\Controllers\singupContoller;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FeederController;
+use App\Http\Controllers\ComederoController;
 
 Route::get('activar/{user}', [activarContoller::class, 'activar'])->name('activar')->middleware('signed');
 Route::post('reactivate', [activarContoller::class, 'reactivar']);
@@ -37,3 +38,5 @@ Route::middleware('auth:sanctum')->group(function () {
 use App\Http\Controllers\AdafruitController;
 
 Route::get('/sync-feed/{feed}', [AdafruitController::class, 'syncFeed']);
+
+Route::get('/sync-comedero', [ComederoController::class, 'syncComederoData']);

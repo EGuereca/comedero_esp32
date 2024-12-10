@@ -25,7 +25,7 @@ class SyncFeedsCommand extends Command
             'nivel-agua-servida' => \App\Models\NivelAguaServida::class,
             'nivel-comida' => \App\Models\NivelComida::class,
             'nivel-comida-servida' => \App\Models\NivelComidaServida::class,
-            'temperatura-agua' => \App\Models\Temperatura::class,
+            'temperatura' => \App\Models\Temperatura::class,
             'gases-comida' => \App\Models\GasesComida::class,
             'mascota-cerca' => \App\Models\MascotaCerca::class,
         ];

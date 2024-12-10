@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use App\Models\Comedero;
+use Illuminate\Support\Facades\Log;
 
 class AdafruitService
 {
@@ -21,7 +23,8 @@ class AdafruitService
      */
     public function getFeedData($username, $feedKey)
     {
-        $url = "{$this->apiUrl}{$username}/feeds/{$feedKey}/data";
+        $url =  'https://io.adafruit.com/api/v2'. "{$username}/feeds/{$feedKey}/data";
+        Log::info("URL de la solicitud: " . $url);
 
         $response = $this->client->get($url, [
             'headers' => [
@@ -32,12 +35,43 @@ class AdafruitService
         return json_decode($response->getBody(), true);
     }
 
+
+    public function updateComederoData($username)
+    {
+        $feeds = [
+            'temperatura_agua' => 'temperatura',
+            'humedad' => 'humedad-alimento',
+            'cantidad_comida' => 'nivel-comida',
+            'cantidad_agua' => 'nivel-agua',
+            'cantidad_agua_servida' => 'nivel-agua-servida',
+            'cantidad_comidad_servida' => 'nivel-comida-servida',
+            'gases' => 'gases-comida',
+            'mascota_cerca' => 'mascota-cera',
+
+        ];
+
+        $comedor = Comedero::first();
+
+        foreach ($feeds as $column => $feedKey) {
+            $data = $this->getFeedData($username, $feedKey);
+            
+            if (!empty($data)) {
+            
+                $lastValue = $data[0]['value'];
+
+            
+                $comedor->{$column} = $lastValue;
+            }
+        }
+
+        $comedor->save();
+    }
     /**
      * Método específico para obtener datos del feed de temperatura.
      */
     public function getTemperaturaData($username)
     {
-        return $this->getFeedData($username, 'temperatura-agua'); // Reemplaza 'temperatura' con tu feed key real
+        return $this->getFeedData($username, 'temperatura'); // Reemplaza 'temperatura' con tu feed key real
     }
 
     /**
