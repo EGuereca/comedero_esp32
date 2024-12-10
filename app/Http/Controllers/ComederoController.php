@@ -16,7 +16,7 @@ class ComederoController extends Controller
 
     public function syncComederoData()
     {
-        $username = getenv('ADAFRUIT_IO_USERNAME');
+        $username =  getenv('ADAFRUIT_IO_USERNAME');
         
         $this->adafruitService->updateComederoData($username);
 
