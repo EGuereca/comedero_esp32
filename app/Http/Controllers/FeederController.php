@@ -8,6 +8,7 @@ use App\Models\Mascota;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Comedero;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FeederController extends Controller
 {
@@ -40,7 +41,7 @@ class FeederController extends Controller
 
     public function verMascotas()
     {
-        $mascotas = Mascota::where('usuario_id', Auth::id())->get();
+        $mascotas = Mascota::with('usuario_id', Auth::id())->get();
 
         return response()->json([
             'message' => 'Mascotas del usuario autenticado',
@@ -48,8 +49,21 @@ class FeederController extends Controller
         ]);
     }
 
+    public function eliminarMascota($id){
+        $registro = Mascota::find($id);
+
+        if(!$registro){
+            return response()->json(["message" => "Mascota no encontrada."], 404);
+        }
+
+        $registro->delete();
+
+        return response()->json(["message" => "Mascota eliminada correctamente"], 200);
+
+    }
+
     public function crearComedero(Request $request)
-    {   
+    {
         $data = $request->all();
 
         $validatedData = Validator::make($data, [

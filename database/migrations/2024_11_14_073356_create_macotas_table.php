@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('animal', ['perro', 'gato', 'otro']);
             $table->foreignId('usuario_id')->constrained('users');
             $table->integer('comidas_diarias')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
