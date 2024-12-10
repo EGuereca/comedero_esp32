@@ -23,7 +23,8 @@ class Comedero extends Model
         'gases',
         'temperatua_agua',
         'mascota_cerca',
-        'estado'
+        'estado',
+        "deleted_at"
     ];
 
     protected $hidden = [
