@@ -39,7 +39,7 @@ class AdafruitService
     public function updateComederoData($username)
     {
         $feeds = [
-            'temperatua_agua' => 'temperatura',
+            'temperatua_agua' => 'temperatura-agua',
             'humedad' => 'humedad-alimento',
             'cantidad_comida' => 'nivel-comida',
             'cantidad_agua' => 'nivel-agua',
@@ -61,8 +61,9 @@ class AdafruitService
                 
                 $lastValue = $data[0]['value'];
 
-            
-                $comedor->{$column} = $lastValue;
+                $roundedValue = round($lastValue, 1);
+
+                $comedor->{$column} = $roundedValue;
             }
         }
 
