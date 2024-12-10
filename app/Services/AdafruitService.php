@@ -51,12 +51,14 @@ class AdafruitService
         ];
 
         $comedor = Comedero::first();
+        Log::info("No hay comederos.");
 
         foreach ($feeds as $column => $feedKey) {
             $data = $this->getFeedData($username, $feedKey);
-            
+            Log::info("{$username}   {$feedKey}");
+
             if (!empty($data)) {
-            
+                
                 $lastValue = $data[0]['value'];
 
             
