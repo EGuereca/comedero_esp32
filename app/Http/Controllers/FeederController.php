@@ -43,7 +43,7 @@ class FeederController extends Controller
     {
         $mascotas = Mascota::where('usuario_id', Auth::id())->get();
         
-
+        // m falta
         return response()->json([
             'message' => 'Mascotas del usuario autenticado',
             'data' => $mascotas,
