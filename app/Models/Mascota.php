@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mascota extends Model
 {
+
+
     use HasFactory, SoftDeletes;
+    protected $table = 'mascotas';
     protected $fillable = [
         'usuario_id',
         'nombre',

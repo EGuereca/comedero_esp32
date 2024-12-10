@@ -52,6 +52,12 @@ class FeederController extends Controller
     public function eliminarMascota($id){
         $registro = Mascota::find($id);
 
+        $comedero = Comedero::where('mascota_id', $id)->get();
+
+        if($comedero){
+            return response()->json(["message" => "La mascota se encuentra en un comedero."], 400);
+        }
+
         if(!$registro){
             return response()->json(["message" => "Mascota no encontrada."], 404);
         }
@@ -59,7 +65,7 @@ class FeederController extends Controller
         $registro->delete();
 
         return response()->json(["message" => "Mascota eliminada correctamente"], 200);
-
+        
     }
 
     public function crearComedero(Request $request)
