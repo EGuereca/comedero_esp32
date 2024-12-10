@@ -42,6 +42,7 @@ class FeederController extends Controller
     public function verMascotas()
     {
         $mascotas = Mascota::where('usuario_id', Auth::id())->get();
+        
 
         return response()->json([
             'message' => 'Mascotas del usuario autenticado',
