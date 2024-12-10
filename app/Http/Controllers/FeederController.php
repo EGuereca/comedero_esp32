@@ -53,10 +53,10 @@ class FeederController extends Controller
     public function eliminarMascota($id){
         $registro = Mascota::find($id);
 
-        $comedero = Comedero::where('mascota_id', $id)->get();
+        $comedero = Comedero::where('mascota_id', $id)->exists();
 
         if($comedero){
-            return response()->json(["message" => "La mascota se encuentra en un comedero."], 400);
+            return response()->json(["message" => "La mascota se encuentra en un comedero. " ], 400);
         }
 
         if(!$registro){
