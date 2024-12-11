@@ -21,7 +21,8 @@ class activarContoller extends Controller
         }
 
         if ($user->is_active) {
-            return response()->json(['message' => 'Su cuenta ya se encuentra activada'], 200);
+            // Renderiza la vista 'CuentaActivada'
+            return view('CuentaVerificada');
         }
 
         $user->estado = true;
@@ -36,7 +37,7 @@ class activarContoller extends Controller
 
         Mail::to($admin->email)->send(new AdminConfirmacion($user));
 
-        return response()->json(['message' => 'Cuenta activada'], 200);
+        return view('CuentaActivada');
     }
 
     public function reactivar(Request $request)
@@ -58,15 +59,26 @@ class activarContoller extends Controller
             return response()->json(['message' => 'No hay ningún usuario con este correo'], 404);
         }
 
-        if ($user->estado) {
-            return response()->json(['message' => 'La cuenta ya está activada'], 409);
+        if ($user->is_active) {
+            // Renderiza la vista 'CuentaActivada'
+            $view = view('CuentaVerificada')->render(); // Asegúrate de que la vista exista en 'resources/views'
+    
+            // Retorna JSON con el mensaje y la vista
+            return response()->json([
+                'message' => 'Su cuenta ya se encuentra activada',
+                'html' => $view, // Contenido HTML de la vista
+            ], 200);
         }
 
         $url = URL::temporarySignedRoute('activar', now()->addMinutes(5), ['user' => $user->id]);
         Mail::to($user->email)->send(new ConfirmarCuenta($user, $url));
 
+        $view = view('CuentaActivada')->render(); // Crea esta vista si aún no la tienes
+    
+        // Retorna JSON con el mensaje de éxito y la vista
         return response()->json([
-        'message' => 'Se envió un correo a su cuenta para completar el registro. Tiene 5 minutos para activar su cuenta.',
+            'message' => 'Cuenta activada con éxito',
+            'html' => $view, // Contenido HTML de la vista
         ], 200);
     }
 

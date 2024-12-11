@@ -15,7 +15,7 @@ class AdafruitService
     public function __construct()
     {
         $this->client = new Client();
-        $this->apiKey = env('ADAFRUIT_IO_KEY'); // Tu clave API desde el archivo .env
+        $this->apiKey = env('ADAFRUIT_IO_KEY');
     }
 
     /**
@@ -23,12 +23,14 @@ class AdafruitService
      */
     public function getFeedData($username, $feedKey)
     {
-        $url =  'https://io.adafruit.com/api/v2/'. "{$username}/feeds/{$feedKey}/data";
+        $apiKey = env('ADAFRUIT_IO_KEY');
+        
+        $url =  "https://io.adafruit.com/api/v2/{$username}/feeds/{$feedKey}/data";
         Log::info("URL de la solicitud: " . $url);
 
         $response = $this->client->get($url, [
             'headers' => [
-                'X-AIO-Key' => $this->apiKey,
+                'X-AIO-Key' => $apiKey
             ],
         ]);
 
@@ -45,29 +47,27 @@ class AdafruitService
             'cantidad_agua' => 'nivel-agua',
             'cantidad_agua_servida' => 'nivel-agua-servida',
             'cantidad_comida_servida' => 'nivel-comida-servida',
-            'gases' => 'gases-comida',
-            'mascota_cerca' => 'mascota-cerca',
-
+            'gases' => 'gases-comida'
         ];
 
-        $comedor = Comedero::first();
-        Log::info("No hay comederos.");
 
-        foreach ($feeds as $column => $feedKey) {
-            $data = $this->getFeedData($username, $feedKey);
-            Log::info("{$username}   {$feedKey}");
+        $comederoList = Comedero::all();
 
-            if (!empty($data)) {
-                
-                $lastValue = $data[0]['value'];
 
-                $roundedValue = round($lastValue, 1);
+        foreach ($comederoList as $comedero) {
+            foreach ($feeds as $column => $feedKey) {
+                $data = $this->getFeedData($username, $feedKey);
 
-                $comedor->{$column} = $roundedValue;
+
+                if (!empty($data)) {
+                    $lastValue = $data[0]['value'];
+                    $comedero->{$column} = $lastValue;
+                    Log::info("Valor asignado a {$column} en comedero {$comedero->id}: {$lastValue}");
+                }
             }
-        }
 
-        $comedor->save();
+            $comedero->save();
+        }
     }
     /**
      * Método específico para obtener datos del feed de temperatura.

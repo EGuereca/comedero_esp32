@@ -40,3 +40,5 @@ use App\Http\Controllers\AdafruitController;
 Route::get('/sync-feed/{feed}', [AdafruitController::class, 'syncFeed']);
 
 Route::get('/sync-comedero', [ComederoController::class, 'syncComederoData']);
+
+Route::post('/servo', [ComederoController::class, 'store']);

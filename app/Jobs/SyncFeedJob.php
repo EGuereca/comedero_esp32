@@ -36,25 +36,24 @@ class SyncFeedJob implements ShouldQueue
 
         $username = env('ADAFRUIT_IO_USERNAME');
         $apiKey = env('ADAFRUIT_IO_KEY');
-        $url = "https://io.adafruit.com/api/v2/{$username}/feeds/{$this->feed}/data/last";
+        $url = "https://io.adafruit.com/api/v2/$username/feeds/{$this->feed}/data/last";
 
-        // Realizar la solicitud a Adafruit IO
         $response = Http::withHeaders([
             'X-AIO-key' => $apiKey,
         ])->get($url);
 
         if ($response->successful()) {
-            $data = $response->json();  // Obtener la respuesta JSON
+            $data = $response->json();
 
-            // Log para revisar la respuesta y asegurarse de que es la esperada
+            
             Log::info("Respuesta recibida para el feed {$this->feed}: " . json_encode($data));
 
-            // Verificar que 'value' esté presente en la respuesta
+            
             if (isset($data['value'])) {
-                $lastValue = $data['value'];  // Obtener el valor
-                $createdAt = Carbon::parse($data['created_at'])->format('Y-m-d H:i:s');  // Convertir la fecha a formato deseado
+                $lastValue = $data['value'];
+                $createdAt = Carbon::parse($data['created_at'])->format('Y-m-d H:i:s');
 
-                // Guardar el último valor en la base de datos
+                
                 $this->modelClass::create([
                     'valor' => $lastValue,
                     'fecha' => $createdAt,

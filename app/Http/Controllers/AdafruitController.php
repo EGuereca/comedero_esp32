@@ -31,13 +31,12 @@ class AdafruitController extends Controller
      */
     public function syncFeed(Request $request, $feed)
     {
-        // Mapeo de feeds a sus modelos correspondientes
+        
         $modelMapping = [
-            'temperatura' => Temperatura::class,
+            'temperatura-agua' => Temperatura::class,
             'humedad-alimento' => Humedad::class,
             'dispensador-comida' => DispensadorComida::class,
             'gases-comida' => GasesComida::class,
-            'mascota-cerca' => MascotaCerca::class,
             'nivel-agua' => NivelAgua::class,
             'nivel-agua-servida' => NivelAguaServida::class,
             'nivel-comida' => NivelComida::class,

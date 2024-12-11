@@ -24,7 +24,6 @@ return new class extends Migration
             $table->double('humedad')->nullable();
             $table->double('gases')->nullable();
             $table->double('temperatua_agua')->nullable();
-            $table->boolean('mascota_cerca')->nullable();
             $table->enum('estado', ['ACTIVO', 'INACTIVO', 'DEFECTUOSO']);
             $table->softDeletes();
             $table->timestamps();
