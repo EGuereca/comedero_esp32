@@ -6,6 +6,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Comedero;
+use App\Models\Mascota;
 
 class UserSeeder extends Seeder
 {
@@ -24,13 +26,24 @@ class UserSeeder extends Seeder
             'rol' => 'user',
         ]);
 
-        // Crear usuario con rol 'admin'
+        
         User::create([
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('12345678'),
             'estado' => 1,
             'rol' => 'admin',
+        ]);
+
+        Mascota::create([
+            'usuario_id' => 1,
+            'nombre' => "chuy",
+            'animal' => 'gato'
+        ]);
+
+        Comedero::create([
+            'usuario_id' => 1,
+            'mascota_id' => 1
         ]);
     }
 }

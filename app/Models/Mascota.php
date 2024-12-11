@@ -15,7 +15,6 @@ class Mascota extends Model
     protected $fillable = [
         'usuario_id',
         'nombre',
-        'tipo',
         'animal',
         'comidas_diarias'
     ];
